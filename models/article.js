@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const isURL = require('validator/lib/isURL');
 
 const articleSchema = new mongoose.Schema({
   keyword: {
@@ -24,12 +25,20 @@ const articleSchema = new mongoose.Schema({
   link: {
     type: String,
     required: true,
-    validate: {},
+    validate: {
+      validator(linkUrl) {
+        return isURL(linkUrl);
+      },
+    },
   },
   image: {
     type: String,
     required: true,
-    validate: {},
+    validate: {
+      validator(imageUrl) {
+        return isURL(imageUrl);
+      },
+    },
   },
   owner: {
     type: mongoose.Schema.Types.ObjectId,
