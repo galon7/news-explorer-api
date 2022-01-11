@@ -16,8 +16,12 @@ module.exports.getArticles = (req, res, next) => {
 
 module.exports.createArticle = (req, res, next) => {
   const owner = req.user._id;
-  const { name, link } = req.body;
-  Article.create({ name, link, owner })
+  const {
+    keyword, title, text, date, source, link, image,
+  } = req.body;
+  Article.create({
+    keyword, title, text, date, source, link, image, owner,
+  })
     .then((article) => {
       if (!article) {
         throw new ErrorHandler(StatusCodes.BAD_REQUEST, 'Error, please check your data');
