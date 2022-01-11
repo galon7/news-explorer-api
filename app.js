@@ -1,7 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const helmet = require('helmet');
-const rateLimit = require('express-rate-limit');
 const cors = require('cors');
 require('dotenv').config();
 
@@ -10,17 +9,13 @@ const { errors } = require('celebrate');
 const articles = require('./routes/articles');
 const users = require('./routes/users');
 const { login, createUser } = require('./controllers/users');
+const { limiter } = require('./middlewares/rate-limiter');
 const { validateUserLogin } = require('./middlewares/validations');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const auth = require('./middlewares/auth');
 
 const app = express();
-
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // limit each IP to 100 requests per windowMs
-});
 
 app.use(requestLogger);
 app.use(limiter);
