@@ -5,7 +5,7 @@ const rateLimit = require('express-rate-limit');
 const cors = require('cors');
 require('dotenv').config();
 
-const { MDB_ADDRESS, PORT = 3000 } = process.env;
+const { NODE_ENV, MDB_ADDRESS, PORT = 3000 } = process.env;
 const { errors } = require('celebrate');
 const articles = require('./routes/articles');
 const users = require('./routes/users');
@@ -27,7 +27,7 @@ app.use(limiter);
 app.use(helmet());
 
 mongoose
-  .connect(MDB_ADDRESS)
+  .connect(NODE_ENV === 'production' ? MDB_ADDRESS : 'mongodb://localhost:27017/news-explorer')
   .then(console.log('Connected to DB'))
   .catch((err) => console.log(`DB connection error: ${err}`));
 
