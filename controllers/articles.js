@@ -20,11 +20,21 @@ module.exports.createArticle = (req, res, next) => {
     keyword, title, text, date, source, link, image,
   } = req.body;
   Article.create({
-    keyword, title, text, date, source, link, image, owner,
+    keyword,
+    title,
+    text,
+    date,
+    source,
+    link,
+    image,
+    owner,
   })
     .then((article) => {
       if (!article) {
-        throw new ErrorHandler(StatusCodes.BAD_REQUEST, 'Error, please check your data');
+        throw new ErrorHandler(
+          StatusCodes.BAD_REQUEST,
+          'Error, please check your data',
+        );
       }
       res.status(StatusCodes.CREATED).send(article);
     })
@@ -34,27 +44,40 @@ module.exports.createArticle = (req, res, next) => {
 module.exports.deleteArticle = (req, res, next) => {
   Article.find({ _id: req.params.articleId })
     .then((articleFound) => {
-      if (!articleFound) {
-        throw new ErrorHandler(StatusCodes.NOT_FOUND, 'Error, article not found');
+      if (articleFound.length === 0) {
+        throw new ErrorHandler(
+          StatusCodes.NOT_FOUND,
+          'Error, article not found',
+        );
       }
       const articleFoundOwner = articleFound[0].owner.valueOf();
       if (articleFoundOwner === req.user._id) {
         Article.findByIdAndRemove(req.params.articleId)
           .then((article) => {
             if (!article) {
-              throw new ErrorHandler(StatusCodes.NOT_FOUND, 'Error, article not found');
+              throw new ErrorHandler(
+                StatusCodes.NOT_FOUND,
+                'Error, article not found',
+              );
             }
             res.status(StatusCodes.OK).send(article);
           })
           .catch((err) => {
             if (err.name === 'CastError') {
-              throw new ErrorHandler(StatusCodes.BAD_REQUEST, 'Error, bad request');
+              throw new ErrorHandler(
+                StatusCodes.BAD_REQUEST,
+                'Error, bad request',
+              );
             }
             next(err);
           })
           .catch(next);
       } else {
-        throw new ErrorHandler(StatusCodes.UNAUTHORIZED, 'Authorization required');
+        throw new ErrorHandler(
+          StatusCodes.UNAUTHORIZED,
+          'Authorization required',
+        );
       }
-    }).catch(next);
+    })
+    .catch(next);
 };

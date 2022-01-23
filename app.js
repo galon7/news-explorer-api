@@ -6,16 +6,15 @@ require('dotenv').config();
 
 const { NODE_ENV, MDB_ADDRESS, PORT = 3000 } = process.env;
 const { errors } = require('celebrate');
-const articles = require('./routes/articles');
-const users = require('./routes/users');
 const { login, createUser } = require('./controllers/users');
 const { limiter } = require('./middlewares/rate-limiter');
 const { validateUserLogin } = require('./middlewares/validations');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
-
+const { errorsHandler } = require('./middlewares/error-handler');
 const auth = require('./middlewares/auth');
 
 const app = express();
+const routes = require('./routes/index');
 
 app.use(requestLogger);
 app.use(limiter);
@@ -41,22 +40,12 @@ app.post('/signup', validateUserLogin, createUser);
 
 app.use(auth);
 
-app.use('/', users);
-app.use('/', articles);
+app.use('/', routes);
 
 app.use(errorLogger);
 
 app.use(errors());
-app.use((err, req, res, next) => {
-  const { statusCode = 500, message } = err;
-  res
-    .status(statusCode)
-    .send({
-      message: statusCode === 500
-        ? 'An error occurred on the server'
-        : message,
-    });
-});
+app.use(errorsHandler);
 
 app.listen(PORT, () => {
   console.log(`App listening at port ${PORT}`);
