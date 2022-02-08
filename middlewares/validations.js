@@ -24,7 +24,7 @@ const validateArticle = celebrate({
     source: Joi.string().required().min(2).max(30),
     link: Joi.string().required().custom(validateURL),
     image: Joi.string().required().custom(validateURL),
-  }),
+  }).unknown(true),
 });
 
 const validateUser = celebrate({
