@@ -4,6 +4,7 @@
   "description": "Final project - News explorer API",
   "main": "app.js",
   "scripts": {
+    "preinstall": "npx npm-force-resolutions",
     "start": "node app.js",
     "dev": "nodemon app.js",
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -25,6 +26,9 @@
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.25.3",
     "nodemon": "^2.0.15"
+  },
+  "resolutions": {
+    "colors": "1.4.0"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
