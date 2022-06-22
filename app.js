@@ -16,6 +16,11 @@ const auth = require('./middlewares/auth');
 const app = express();
 const routes = require('./routes/index');
 
+const corsOptions = {
+  origin: 'https://news-explorer-frontend-sable.vercel.app/',
+  optionsSuccessStatus: 200,
+};
+
 app.use(requestLogger);
 app.use(limiter);
 app.use(helmet());
@@ -35,8 +40,8 @@ app.get('/crash-test', () => {
   }, 0);
 });
 
-app.use(cors());
-app.options('*', cors());
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
 
 app.use(express.json());
 app.post('/signin', validateUserLogin, login);
