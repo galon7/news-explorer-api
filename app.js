@@ -21,7 +21,11 @@ app.use(limiter);
 app.use(helmet());
 
 mongoose
-  .connect(NODE_ENV === 'production' ? MDB_ADDRESS : 'mongodb://localhost:27017/news-explorer')
+  .connect(
+    NODE_ENV === 'production'
+      ? MDB_ADDRESS
+      : 'mongodb://localhost:27017/news-explorer',
+  )
   .then(console.log('Connected to DB'))
   .catch((err) => console.log(`DB connection error: ${err}`));
 
@@ -31,7 +35,7 @@ app.get('/crash-test', () => {
   }, 0);
 });
 
-app.use(cors());
+// app.use(cors());
 app.options('*', cors());
 
 app.use(express.json());
