@@ -5,7 +5,7 @@ const cors = require('cors');
 require('dotenv').config();
 
 const {
-  NODE_ENV, MDB_ADDRESS, MONGODB_URI, PORT = 3000,
+  NODE_ENV, MONGODB_URI, PORT = 3000,
 } = process.env;
 const { errors } = require('celebrate');
 const { login, createUser } = require('./controllers/users');
@@ -26,7 +26,7 @@ mongoose
   .connect(
     NODE_ENV === 'production'
       ? MONGODB_URI
-      : MDB_ADDRESS,
+      : MONGODB_URI,
   )
   .then(console.log('Connected to DB'))
   .catch((err) => console.log(`DB connection error: ${err}`));
