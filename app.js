@@ -4,7 +4,9 @@ const helmet = require('helmet');
 const cors = require('cors');
 require('dotenv').config();
 
-const { NODE_ENV, MDB_ADDRESS, PORT = 3000 } = process.env;
+const {
+  NODE_ENV, MDB_ADDRESS, MONGODB_URI, PORT = 3000,
+} = process.env;
 const { errors } = require('celebrate');
 const { login, createUser } = require('./controllers/users');
 const { limiter } = require('./middlewares/rate-limiter');
@@ -23,8 +25,8 @@ app.use(helmet());
 mongoose
   .connect(
     NODE_ENV === 'production'
-      ? MDB_ADDRESS
-      : 'mongodb://localhost:27017/news-explorer',
+      ? MONGODB_URI
+      : MDB_ADDRESS,
   )
   .then(console.log('Connected to DB'))
   .catch((err) => console.log(`DB connection error: ${err}`));
