@@ -5,7 +5,7 @@ const cors = require('cors');
 require('dotenv').config();
 
 const {
-  MONGODB_URI, PORT = 3000,
+  NODE_ENV, MDB_ADDRESS, MONGODB_URI, PORT = 3000,
 } = process.env;
 const { errors } = require('celebrate');
 const { login, createUser } = require('./controllers/users');
@@ -22,12 +22,11 @@ app.use(requestLogger);
 app.use(limiter);
 app.use(helmet());
 
-mongoose.connect(MONGODB_URI)
-  // .connect(
-  //   NODE_ENV === 'production'
-  //     ? MONGODB_URI
-  //     : MDB_ADDRESS,
-  // )
+mongoose.connect(
+  NODE_ENV === 'production'
+    ? MONGODB_URI
+    : MDB_ADDRESS,
+)
   .then(() => console.log('Connected to DB'))
   .catch((err) => console.log(`DB connection error: ${err}`));
 
